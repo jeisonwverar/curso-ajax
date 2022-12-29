@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Validaciones de Formulario</title>
+  <title>Envio de formulario con Fectch y formsubmit</title>
   <style>
     /* **style form** */
 
@@ -114,12 +114,12 @@
   </style>
 </head>
 <body>
-  <h1>Formulario</h1>
+  <!-- <h1>Formulario</h1> -->
   <!-- Formulario -->
-  <form class="contact-form ">
+  <form target="_blank" class="contact-form " action="https://formsubmit.co/jw.vera.r@gmail.com" method="POST">
     <legend>Envíanos tus comentarios</legend>
     <input type="text" name="name" placeholder="Escribe tu nombre" title="El nombre sólo acepta letras y espacios en blanco" pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$" required>
-    <input type="email" required name="email" placeholder="Escribe tu email"  title="Email incorrecto" pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$">
+    <input type="email"  name="email" placeholder="Escribe tu email"  title="Email incorrecto" pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$" required>
     <input type="text" name="subject" placeholder="Asunto a tratar" title="El asunto es requerido" required> 
     <textarea name="comments"  cols="50" rows="5" placeholder="Escribe tus comentarios" data-pattern="^.{1,255}$" title="Tu comentario no debe exceder los 255 caracteres" required></textarea>
     <input type="submit" value="Enviar">
@@ -175,11 +175,52 @@
             }
         });
 
+        d.addEventListener('submit',e=>{
+          //e.preventDefault();
+          alert('enviar formulario');
+          const $loader =d.querySelector('.contact-form-loader'),
+            $response=d.querySelector('.contact-form-response');
+    
+            $loader.classList.remove('none');
+           /* 
+            setTimeout(()=>{
+              $loader.classList.add('none');
+              $response.classList.remove('none');
+             $form.reset();
+              setTimeout(()=>$response.classList.add('none'),3000);
+    
+            },3000)
+     */
+          fetch("https://formsubmit.co/ajax/jw.vera.r@gmail.com"
+          ,{
+            method: "POST",
+            body: new FormData(e.target) //evento submit objeto de formulario
+            
+          })
+          .then(res=>res.ok?res.json():Promise.reject(res))
+          .then(json=>{
+            console.log(json)
+            $loader.classList.add('none');
+            $response.classList.remove('none');
+            $response.innerHTML =`<p>${json.message}</p>`
+            $form.reset();
+          })
+          .catch(err=>{
+            console.log(err);
+            let message=err.statusText||'Ocurrio un error intenta nuevamente';
+            $response.innerHTML=`Error <p>${err.status}:${message}</p>`;
+
+
+          })
+          .finally(()=>{
+            setTimeout(()=>$response.classList.add('none'),3000)
+          })
+        });
     };
 
 
 
-    d.addEventListener('DOMContentLoaded',contactFormValidations())
+    d.addEventListener('DOMContentLoaded',contactFormValidations)
   </script>
 </body>
 </html>
