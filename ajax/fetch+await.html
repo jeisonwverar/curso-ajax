@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fetch async await</title>
+</head>
+<body>
+    <h1>API fetch</h1>
+    <ol id="fetch-async"></ol>
+    <script>
+        (()=>{
+            const $fetchAsync=document.getElementById("fetch-async");
+            const $fragment =document.createDocumentFragment();
+
+            async function getData(){
+                try{
+                    let res=await fetch("https://jsonplaceholder.typicode.com/users");
+                    let json =await res.json();
+                        console.log(json,res);
+                        if(!res.ok){
+                            throw {
+                                status:res.status,
+                                statusText:res.statusText
+                            }
+                        }else{
+                    json.map(el => {
+                        const $li =document.createElement('li');
+                        $li.innerHTML=`${el.name}--${el.email}--${el.phone}`;
+                        //console.log($li)
+                        $fragment.appendChild($li);
+                    
+                    });
+                    $fetchAsync.appendChild($fragment);
+
+                    }
+                }catch(err){
+                    let message =err.status||'Ocurrio un error';
+                    $fetchAsync.innerHTML=`${err.status}--${err.message}`
+                }
+                
+                
+            }
+
+            getData();
+        })();
+    </script>
+</body>
+</html>

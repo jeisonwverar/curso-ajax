@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>objeto XHMLHTTPREQUEST</title>
+</head>
+<body>
+    <h2>Objeto xhmlhttprequest</h2>
+    <br>
+     <ol id="xhr">
+
+     </ol> 
+
+    <script>
+        (()=>{
+        const  url='https://jsonplaceholder.typicode.com/users';
+        const xhr= new XMLHttpRequest();
+        $xhr=document.getElementById('xhr');
+        console.log(xhr)
+        const $fragment =document.createDocumentFragment();
+        //creacion de fragmmento
+         
+        xhr.addEventListener('readystatechange',(e)=>{
+            if( xhr.readyState!==4)return;
+            console.log(xhr);
+            
+            if(e.target.status == 200){
+                console.log('Exito');
+                let json = JSON.parse(xhr.responseText);
+                json.forEach(element => {
+
+                    let $li =document.createElement('li');
+                        $li.innerHTML =`${element.name}--${element.email}--${element}`;
+                        
+                        $fragment.appendChild($li);
+                        
+                        console.log($fragment);
+                });
+
+                $xhr.appendChild($fragment)
+                
+            }else{
+                console.error('error')
+                let message =xhr.statusText||'Ocurrio un error';
+                $xhr.innerHTML=message
+            }
+        });
+        
+        xhr.open('GET',url);
+        xhr.send();
+
+       })()
+
+    </script>
+</body>
+</html>

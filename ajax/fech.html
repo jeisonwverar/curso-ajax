@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fetch</title>
+</head>
+<body>
+    <h1>Ap fetch</h1>
+<ol id="fetch">
+
+</ol>
+
+<script>
+    (()=>{
+        const $fetch = document.getElementById('fetch');
+        $fragment =document.createDocumentFragment();
+    //console.log($fetch)
+    
+    //RECURSO a consumir
+
+    fetch("https://jsonplaceholder.typicode.com/users")
+    .then((res)=>{
+       return res.ok?res.json():Promise.reject(res);
+    }).then((json)=>{
+        console.log(json)
+            json.map(el => {
+                const $li =document.createElement('li');
+                $li.innerHTML=`${el.name}--${el.email}--${el.phone}`;
+                console.log($li)
+                $fragment.appendChild($li);
+        });
+
+        $fetch.appendChild($fragment);
+    })
+    .catch((err)=>{
+        let message =err.status||'Ocurrio un error';
+                $fetch.innerHTML=`${err.status}--${err.message}`
+    })
+    .finally(()=>{
+        console.log('se ejecuta independiente de la promesa fetch')
+    })
+})()
+
+</script>
+</body>
+</html>

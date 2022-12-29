@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axios async</title>
+</head>
+<body>
+    <h1>axios async</h1>
+    <ol id="axios-async"></ol>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        (()=>{
+            const $axiosAsync=document.getElementById("axios-async");
+            const $fragment =document.createDocumentFragment();
+
+            async function getData(){
+                try {
+                    let res = await axios("https://jsonplaceholder.typicode.com/userS");
+                    let data =await res.data;
+                    console.log(data)
+
+                    data.map(el => {
+                        const $li =document.createElement('li');
+                        $li.innerHTML=`${el.name}--${el.email}--${el.phone}`;
+                        //console.log($li)
+                        $fragment.appendChild($li);
+                    
+                    });
+                    $axiosAsync.appendChild($fragment);
+
+                } catch (error) {
+                    console.log(error.response);
+                    let message=error.response.statusText || 'OCURRIO UN ERROR'
+                    $axiosAsync.innerHTML=`ERROR: ${error.response.status}:${message}`
+                } finally{
+                    console.log('se ejecuta independientemente del try..catch')
+                }
+            }
+            getData();
+        })()
+
+
+    </script>
+</body>
+</html>

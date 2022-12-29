@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axios</title>
+</head>
+<body>
+    <h1>Axios</h1>
+    <ol id="axios"></ol>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        (()=>{
+            const $axios=document.getElementById("axios");
+            const $fragment =document.createDocumentFragment();
+            axios
+            .get("https://jsonplaceholder.typicode.com/users")
+            .then((res)=>{
+                 let json=res.data;
+                json.map(el => {
+                        const $li =document.createElement('li');
+                        $li.innerHTML=`${el.name}--${el.email}--${el.phone}`;
+                        //console.log($li)
+                        $fragment.appendChild($li);
+                    
+                    });
+                    $axios.appendChild($fragment);
+            })
+            .catch((err)=>{
+                console.log(err.response);
+                $axios.innerHTML=`${err.response.status}`
+            })
+
+        })()
+    </script>
+</body>
+</html>
